@@ -19,9 +19,9 @@ do
                 cat ${PNG} | pngquant ${COLORS} > ${TMP1}
         fi
 
-        pngcrush -q -rem alla ${TMP1} ${TMP2}
+        pngcrush -q -brute -l 9 -rem alla ${TMP1} ${TMP2}
         rm ${TMP1}
-        optipng -quiet -out ${TMP1} ${TMP2}
+        optipng -quiet -o7 -out ${TMP1} ${TMP2}
 
         AFTER=`stat -c %s ${TMP1}`
         if [ "$AFTER" -lt "$BEFORE" ]; then
