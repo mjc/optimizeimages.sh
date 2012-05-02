@@ -1,4 +1,5 @@
 #!/bin/sh
+set -o errexit
 
 PNGS=`find . -iname "*.png"`
 TMP1="_TMP1.PNG"
@@ -19,7 +20,8 @@ do
         fi
 
         pngcrush -q -rem alla ${TMP1} ${TMP2}
-        optipng -quiet -force -out ${TMP1} ${TMP2}
+        rm ${TMP1}
+        optipng -quiet -out ${TMP1} ${TMP2}
 
         AFTER=`stat -c %s ${TMP1}`
         if [ "$AFTER" -lt "$BEFORE" ]; then
