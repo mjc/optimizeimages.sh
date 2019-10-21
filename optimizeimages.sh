@@ -85,12 +85,21 @@ detect_core_count() {
 	core_count=$(grep 'cpu cores' /proc/cpuinfo | uniq | cut -d':' -f2 | tr -d ' ')
 	thread_count=$(grep 'processor' /proc/cpuinfo | tail -n 1 | cut -d':' -f2 | tr -d ' ')
 	thread_count=$((thread_count+1))
-    elif which nproc; then
+    elif which nproc > /dev/null; then
 	core_count=$(nproc --all)
 	thread_count=$core_count
     fi
     echo "Number of cores: ${core_count}, number of threads: ${thread_count}"
 }
+
+call_find_utility() {
+    if which fd > /dev/null; then
+	files=$(fd -e png -e jpg -e jpeg .)
+    elif which find > /dev/null; then
+	files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
+    fi
+}
+
 
 # from https://unix.stackexchange.com/a/216475
 # @TODO port to POSIX or use some other method.
@@ -116,9 +125,8 @@ run_with_lock() {
 detect_core_count
 make_semaphore "$thread_count"
 
-# @TODO detect fd and fallback to find
-files=$(fd -e png -e jpg -e jpeg .)
-# files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
+call_find_utility
+
 for file in ${files}
 do
     run_with_lock pick_an_optimizer "${file}"
