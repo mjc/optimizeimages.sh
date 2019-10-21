@@ -13,6 +13,7 @@ This will be POSIX sh compliant as soon as I fix the semaphore implementation.
 - [x] Use `file(1)` to detect file type and skip empty files.
 - [x] Detect cpu count
 - [x] Only spawn N processes and make sure N are always running when there are images to optimize
+- [ ] Add support for gif and other file types
 - [ ] Detect if [fd](https://github.com/sharkdp/fd) is installed and fall back to `find` if it isn't.
 - [ ] Detect if the prerequisite programs are installed
 - [ ] Install prerequisites if they are not installed
