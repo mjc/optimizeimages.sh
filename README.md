@@ -1,10 +1,10 @@
-##### Script to recursively optimize all images in current directory
+# Script to recursively optimize all images in current directory
 
 Forked from: https://gist.github.com/mstroeck/3363227
 
 This should be POSIX sh compliant.
 
-TODO:
+### TODO:
 - [x] pass shellcheck
 - [x] use functions to make parallelization easier
 - [x] don't reuse the same filenames so we can parallelize
