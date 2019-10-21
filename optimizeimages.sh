@@ -58,10 +58,8 @@ optimize_a_jpg() {
     rm -f "${tmp1}"
 }
 
-
-
-for file in ${files}
-do
+pick_an_optimizer() {
+    file=$1
     case $(file -bi "$file") in
 	"image/jpeg; charset=binary" )
 	    optimize_a_jpg "$file"
@@ -73,4 +71,9 @@ do
 	    echo "skipping empty file ${file}"
 	    ;;
     esac
+}
+
+for file in ${files}
+do
+    pick_an_optimizer "${file}"
 done
