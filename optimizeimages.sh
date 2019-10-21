@@ -1,10 +1,6 @@
 #!/bin/sh
 set -o errexit
 
-# @TODO detect fd and fallback to find
-files=$(fd -e png -e jpg -e jpeg .)
-# files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
-
 optimize_a_png() {
     echo "Optimizing a PNG"
     png=$1
@@ -73,6 +69,29 @@ pick_an_optimizer() {
     esac
 }
 
+detect_core_count() {
+    if [ "$(uname -s)" = "FreeBSD" ]; then
+	core_count=$(sysctl hw.ncpu | cut -d':' -f2 | tr -d ' ')
+	# @TODO this is probably wrong.
+	thread_count=$core_count
+    elif [ "$(uname -s)" = "Darwin" ]; then
+	core_count=$(sysctl hw.physicalcpu | cut -d':' -f2 | tr -d ' ')
+	thread_count=$(sysctl hw.logicalcpu | cut -d':' -f2 | tr -d ' ')
+    elif [ -r /proc/cpuinfo ]; then
+	core_count=$(grep 'cpu cores' /proc/cpuinfo | uniq | cut -d':' -f2 | tr -d ' ')
+	thread_count=$(grep 'processor' /proc/cpuinfo | tail -n 1 | cut -d':' -f2 | tr -d ' ')
+	thread_count=$((thread_count+1))
+    elif which nproc; then
+	core_count=$(nproc --all)
+	thread_count=$core_count
+    fi
+    echo "Number of cores: ${core_count}, number of threads: ${thread_count}"
+}
+detect_core_count
+
+# @TODO detect fd and fallback to find
+files=$(fd -e png -e jpg -e jpeg .)
+# files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
 for file in ${files}
 do
     pick_an_optimizer "${file}"
