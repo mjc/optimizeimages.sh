@@ -1,6 +1,6 @@
 # Script to recursively optimize all images in current directory
 
-Forked from: https://gist.github.com/mstroeck/3363227
+Forked from [this](https://gist.github.com/mstroeck/3363227), which is a fork of: [this](https://gist.github.com/Munter/2576308)
 
 This will be POSIX sh compliant as soon as I fix the semaphore implementation.
 
