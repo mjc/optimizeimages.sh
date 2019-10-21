@@ -6,53 +6,53 @@ pngs=$(fd -e png .)
 jpgs=$(fd -e jpg .)
 #pngs=$(find . -iname "*.png")
 #jpgs=$(find . -iname "*.jpg")
-TMP1="_TMP1.PNG"
-TMP2="_TMP2.PNG"
+tmp1="_tmp1.PNG"
+tmp2="_tmp2.PNG"
 
 echo "Optimizing PNG"
 for png in ${pngs}
 do
-	BEFORE=$(stat -c %s "${png}")
-	printf "	%s: %s " "${png}" "${BEFORE}"
-	cp "${png}" "${TMP1}"
-	COLORS=$(pngtopnm "${png}" | ppmhist -noheader | wc -l)
+	before=$(stat -c %s "${png}")
+	printf "	%s: %s " "${png}" "${before}"
+	cp "${png}" "${tmp1}"
+	colors=$(pngtopnm "${png}" | ppmhist -noheader | wc -l)
 
-	if [ "$COLORS" -lt 2 ]; then
-		COLORS=2
+	if [ "$colors" -lt 2 ]; then
+		colors=2
 	fi
 
-	if [ "$COLORS" -lt 257 ]; then
-	    pngquant ${COLORS} < "${png}" > "${TMP1}"
+	if [ "$colors" -lt 257 ]; then
+	    pngquant ${colors} < "${png}" > "${tmp1}"
 	fi
 
-	pngcrush -q -l 9 -brute -rem alla "${TMP1}" "${TMP2}"
-	rm "${TMP1}"
-	optipng -quiet -o7 -out "${TMP1}" "${TMP2}"
+	pngcrush -q -l 9 -brute -rem alla "${tmp1}" "${tmp2}"
+	rm "${tmp1}"
+	optipng -quiet -o7 -out "${tmp1}" "${tmp2}"
 
-	AFTER=$(stat -c %s "${TMP1}")
-	if [ "$AFTER" -lt "$BEFORE" ]; then
-		mv "${TMP1}" "${png}"
-		echo "--> ${AFTER}"
+	after=$(stat -c %s "${tmp1}")
+	if [ "$after" -lt "$before" ]; then
+		mv "${tmp1}" "${png}"
+		echo "--> ${after}"
 	else
 		echo "(Already optimal)"
 	fi
 
-	rm -f "${TMP1}" "${TMP2}"
+	rm -f "${tmp1}" "${tmp2}"
 done
 
 echo "Optimizing JPG"
 for jpg in ${jpgs}
 do
-	BEFORE=$(stat -c %s "${jpg}")
-	printf "	%s: %s " "${jpg}" "${BEFORE}"
-	jpegtran -optimize -copy none "${jpg}" > "${TMP1}"
-	AFTER=$(stat -c %s "${TMP1}")
+	before=$(stat -c %s "${jpg}")
+	printf "	%s: %s " "${jpg}" "${before}"
+	jpegtran -optimize -copy none "${jpg}" > "${tmp1}"
+	after=$(stat -c %s "${tmp1}")
 
-	if [ "$AFTER" -lt "$BEFORE" ]; then
-		mv "${TMP1}" "${jpg}"
-		echo "--> ${AFTER}"
+	if [ "$after" -lt "$before" ]; then
+		mv "${tmp1}" "${jpg}"
+		echo "--> ${after}"
 	else
 		echo "(Already optimal)"
 	fi
-	rm -f "${TMP1}"
+	rm -f "${tmp1}"
 done
