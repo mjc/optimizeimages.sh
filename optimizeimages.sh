@@ -6,11 +6,12 @@ pngs=$(fd -e png .)
 jpgs=$(fd -e jpg .)
 #pngs=$(find . -iname "*.png")
 #jpgs=$(find . -iname "*.jpg")
-tmp1="_tmp1.PNG"
-tmp2="_tmp2.PNG"
 
 optimize_a_png() {
     png=$1
+    tmp1="${png}_tmp1.png"
+    tmp2="${png}_tmp2.png"
+
     before=$(stat -c %s "${png}")
     printf "	%s: %s " "${png}" "${before}"
     cp "${png}" "${tmp1}"
@@ -41,6 +42,8 @@ optimize_a_png() {
 
 optimize_a_jpg() {
     jpg=$1
+    tmp1="${jpg}_tmp1.png"
+    tmp2="${jpg}_tmp2.png"
     before=$(stat -c %s "${jpg}")
     printf "	%s: %s " "${jpg}" "${before}"
     jpegtran -optimize -copy none "${jpg}" > "${tmp1}"
