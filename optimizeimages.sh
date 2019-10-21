@@ -62,9 +62,7 @@ optimize_a_jpg() {
 
 for file in ${files}
 do
-    base=$(basename "$file")
-    ext=${base##*.}
-    case $base in
+    case $(basename "$file") in
 	*.jpg )
 	    optimize_a_jpg "$file"
 	    ;;
