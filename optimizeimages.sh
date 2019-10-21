@@ -66,6 +66,10 @@ pick_an_optimizer() {
 	"inode/x-empty; charset=binary" )
 	    echo "skipping empty file ${file}"
 	    ;;
+	* )
+	    echo "wtf is this file: ${file}"
+	    file -bi "$file"
+	    exit 1;
     esac
 }
 
