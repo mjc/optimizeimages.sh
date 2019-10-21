@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -o errexit
 
 optimize_a_png() {
@@ -8,7 +8,6 @@ optimize_a_png() {
     tmp2="${png}_tmp2.png"
 
     before=$(stat -c %s "${png}")
-    printf "	%s: %s " "${png}" "${before}"
     cp "${png}" "${tmp1}"
     colors=$(pngtopnm "${png}" | ppmhist -noheader | wc -l)
 
@@ -24,6 +23,7 @@ optimize_a_png() {
     rm "${tmp1}"
     optipng -quiet -o7 -out "${tmp1}" "${tmp2}"
 
+    printf "	%s: %s " "${png}" "${before}"
     after=$(stat -c %s "${tmp1}")
     if [ "$after" -lt "$before" ]; then
 	mv "${tmp1}" "${png}"
@@ -41,10 +41,10 @@ optimize_a_jpg() {
     tmp1="${jpg}_tmp1.png"
     tmp2="${jpg}_tmp2.png"
     before=$(stat -c %s "${jpg}")
-    printf "	%s: %s " "${jpg}" "${before}"
     jpegtran -optimize -copy none "${jpg}" > "${tmp1}"
     after=$(stat -c %s "${tmp1}")
 
+    printf "	%s: %s " "${jpg}" "${before}"
     if [ "$after" -lt "$before" ]; then
 	mv "${tmp1}" "${jpg}"
 	echo "--> ${after}"
@@ -87,12 +87,35 @@ detect_core_count() {
     fi
     echo "Number of cores: ${core_count}, number of threads: ${thread_count}"
 }
+
+# from https://unix.stackexchange.com/a/216475
+# @TODO port to POSIX or use some other method.
+make_semaphore() {
+    mkfifo pipe-$$
+    exec 3<>pipe-$$
+    rm pipe-$$
+    local i=$1
+    for((;i>0;i--)); do
+	printf %s 000 >&3
+    done
+}
+
+run_with_lock() {
+    local x
+    read -r -u 3 -n 3 x && ((0==x)) || exit "$x"
+    (
+	( "$@"; )
+	printf '%.3d' $? >&3
+    )&
+}
+
 detect_core_count
+make_semaphore "$thread_count"
 
 # @TODO detect fd and fallback to find
 files=$(fd -e png -e jpg -e jpeg .)
 # files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
 for file in ${files}
 do
-    pick_an_optimizer "${file}"
+    run_with_lock pick_an_optimizer "${file}"
 done
