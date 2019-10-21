@@ -62,15 +62,15 @@ optimize_a_jpg() {
 
 for file in ${files}
 do
-    case $(basename "$file") in
-	*.jpg )
+    case $(file -bi "$file") in
+	"image/jpeg; charset=binary" )
 	    optimize_a_jpg "$file"
 	    ;;
-	*.jpeg )
-	    optimize_a_jpg "$file"
-	    ;;
-	*.png )
+	"image/png; charset=binary" )
 	    optimize_a_png "$file"
+	    ;;
+	"inode/x-empty; charset=binary" )
+	    echo "skipping empty file ${file}"
 	    ;;
     esac
 done
