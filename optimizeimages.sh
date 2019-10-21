@@ -2,12 +2,11 @@
 set -o errexit
 
 # @TODO detect fd and fallback to find
-pngs=$(fd -e png .)
-jpgs=$(fd -e jpg .)
-#pngs=$(find . -iname "*.png")
-#jpgs=$(find . -iname "*.jpg")
+files=$(fd -e png -e jpg -e jpeg .)
+# files=$(find . \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \))
 
 optimize_a_png() {
+    echo "Optimizing a PNG"
     png=$1
     tmp1="${png}_tmp1.png"
     tmp2="${png}_tmp2.png"
@@ -41,6 +40,7 @@ optimize_a_png() {
 }
 
 optimize_a_jpg() {
+    echo "Optimizing a JPEG"
     jpg=$1
     tmp1="${jpg}_tmp1.png"
     tmp2="${jpg}_tmp2.png"
@@ -58,14 +58,21 @@ optimize_a_jpg() {
     rm -f "${tmp1}"
 }
 
-echo "Optimizing PNG"
-for png in ${pngs}
-do
-    optimize_a_png "$png"
-done
 
-echo "Optimizing JPG"
-for jpg in ${jpgs}
+
+for file in ${files}
 do
-  optimize_a_jpg "$jpg"
+    base=$(basename "$file")
+    ext=${base##*.}
+    case $base in
+	*.jpg )
+	    optimize_a_jpg "$file"
+	    ;;
+	*.jpeg )
+	    optimize_a_jpg "$file"
+	    ;;
+	*.png )
+	    optimize_a_png "$file"
+	    ;;
+    esac
 done
