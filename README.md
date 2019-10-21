@@ -2,7 +2,7 @@
 
 Forked from: https://gist.github.com/mstroeck/3363227
 
-This should be POSIX sh compliant.
+This will be POSIX sh compliant as soon as I fix the semaphore implementation.
 
 ### TODO:
 - [x] Pass shellcheck
