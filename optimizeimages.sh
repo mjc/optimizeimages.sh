@@ -1,8 +1,11 @@
 #!/bin/sh
 set -o errexit
 
-PNGS=`find . -iname "*.png"`
-JPGS=`find . -iname "*.jpg"`
+# @TODO detect fd and fallback to find
+PNGS=`fd -e png .`
+JPGS=`fd -e jpg .`
+#PNGS=`find . -iname "*.png"`
+#JPGS=`find . -iname "*.jpg"`
 TMP1="_TMP1.PNG"
 TMP2="_TMP2.PNG"
 
