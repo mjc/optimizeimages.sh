@@ -1,4 +1,5 @@
 # Script to recursively optimize all images in current directory
+# THIS WILL OVERWRITE YOUR ORIGINAL IMAGES AND STRIP METADATA. MAKE A SNAPSHOT.
 
 Forked from [this](https://gist.github.com/mstroeck/3363227), which is a fork of: [this](https://gist.github.com/Munter/2576308)
 
