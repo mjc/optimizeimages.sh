@@ -2,7 +2,6 @@
 set -o errexit
 
 optimize_a_png() {
-    echo "Optimizing a PNG"
     png=$1
     tmp1="${png}_tmp1.png"
     tmp2="${png}_tmp2.png"
@@ -36,7 +35,6 @@ optimize_a_png() {
 }
 
 optimize_a_jpg() {
-    echo "Optimizing a JPEG"
     jpg=$1
     tmp1="${jpg}_tmp1.png"
     tmp2="${jpg}_tmp2.png"
