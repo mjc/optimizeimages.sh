@@ -107,9 +107,10 @@ make_semaphore() {
     mkfifo pipe-$$
     exec 3<>pipe-$$
     rm pipe-$$
-    local i=$1
-    for((;i>0;i--)); do
+    sem_count=$1
+    while [ "$((sem_count != 0))" -ne 0 ]; do
 	printf %s 000 >&3
+	: "$((sem_count = sem_count - 1))"
     done
 }
 
