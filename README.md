@@ -5,6 +5,8 @@ Forked from [this](https://gist.github.com/mstroeck/3363227), which is a fork of
 
 This will be POSIX sh compliant as soon as I fix the semaphore implementation.
 
+Recommend also using [Pingo](https://css-ig.net/pingo) but it appears to be closed source.
+
 ### TODO:
 - [x] Pass shellcheck
 - [x] Use functions to make parallelization easier
