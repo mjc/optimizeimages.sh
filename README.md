@@ -9,7 +9,7 @@ This will be POSIX sh compliant as soon as I fix the semaphore implementation.
 - [x] Pass shellcheck
 - [x] Use functions to make parallelization easier
 - [x] Don't reuse the same filenames so we can parallelize
-- [x] Dse fd instead of find so walking files is a lot faster.
+- [x] Use fd instead of find so walking files is a lot faster.
 - [x] Only use one `fd` or `find` and optimize both types of images in the same loop.
 - [x] Use `file(1)` to detect file type and skip empty files.
 - [x] Detect cpu count
